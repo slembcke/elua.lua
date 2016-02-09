@@ -4,3 +4,4 @@ Let's sing a song!
 Take one down pass it around, {{=i - 1}} bottles of beer on the wall.
 {{end}}
 That was fun!
+"{{=foo}}"

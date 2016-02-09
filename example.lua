@@ -5,6 +5,6 @@ dbg.call(function()
 local template = require("template")
 local chunk = template.loadFile("example.template")
 
-print(chunk())
+print(chunk{foo = "bar"})
 
 end)
