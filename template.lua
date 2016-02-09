@@ -2,28 +2,29 @@ local template = {}
 
 function template.compile(source)
 	local fragments = {"local strings = {}; "}
+	function push(...) for _, str in ipairs{...} do table.insert(fragments, str) end end
+	local sub = string.sub
+	
+	local eq = string.byte("=")
+	
 	local cursor = 1
 	
 	while true do
 		str, code = string.match(source, "(.-)({{.-}})", cursor)
 		if str == nil and code == nil then
-			table.insert(fragments, "table.insert(strings, [[")
-			table.insert(fragments, string.sub(source, cursor, -1))
-			table.insert(fragments, "]]); ")
-			
+			-- Push the remainder of the string.
+			push("table.insert(strings, [[", sub(source, cursor, -1), "]]); ")
 			break
 		else
-			table.insert(fragments, "table.insert(strings, [[")
-			table.insert(fragments, str)
-			table.insert(fragments, "]]); ")
+			-- Push the string component.
+			push("table.insert(strings, [[", str, "]]); ")
 			
-			if string.sub(code, 3, 3) == "=" then
-				table.insert(fragments, "table.insert(strings, tostring(")
-				table.insert(fragments, string.sub(code, 4, -3))
-				table.insert(fragments, ")); ")
+			if string.byte(code, 3) == eq then
+				-- Push an evaluation expression {{=...}}
+				push("table.insert(strings, tostring(", sub(code, 4, -3), ")); ")
 			else
-				table.insert(fragments, string.sub(code, 3, -3))
-				table.insert(fragments, "; ")
+				-- Push a chunk {{...}}
+				push(sub(code, 3, -3), "; ")
 			end
 		end
 		
