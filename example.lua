@@ -2,8 +2,8 @@ local dbg = require("debugger")
 
 dbg.call(function()
 
-local template = require("template")
-local chunk = template.loadFile("example.template")
+local template = require("elua")
+local chunk = template.loadFile("example.elua")
 
 print(chunk{foo = "bar"})
 

@@ -4,11 +4,7 @@ local EQUALS = string.byte("=")
 local sub = string.sub
 
 function template.compile(source)
-	local fragments = {
-		"local _ENV = ... or {};",
-		"local __OUT__ = {};",
-		"local function __PUSH__(str) __OUT__[#__OUT__ + 1] = str end;"
-	}
+	local fragments = {"local __PUSH__, _ENV = ...;"}
 	
 	local cursor = 1
 	function push(...) for _, str in ipairs{...} do table.insert(fragments, str) end end
@@ -35,17 +31,18 @@ function template.compile(source)
 		cursor = cursor + #str + #code
 	end
 	
-	table.insert(fragments, "return __OUT__")
 	return table.concat(fragments)
 end
 
 function template.load(str, name)
 	local compiled = template.compile(str)
-	local chunk = load(compiled, name or "COMPILED TEMPLATE", "t")
+	local chunk = load(compiled, name or "COMPILED TEMPLATE", "t", nil)
 	
 	return function(env)
-		local results = chunk(env)
-		for i, v in ipairs(results) do results[i] = tostring(v) end
+		local results = {}
+		local function push(value) table.insert(results, tostring(value)) end
+		
+		chunk(push, env or nil)
 		return table.concat(results)
 	end
 end
