@@ -1,8 +1,11 @@
 # ELua
-ERB inspired templates for Lua.
+Extremely simple, ERB inspired templates for Lua. Made for a personal project, but possibly useful to others.
 
-Made for a personal project, but possibly useful to others.
-It doesn't provide security at all, as my personal use case features neither server programming nor user input.
+You can embed expressions, control structures, pass an environment, etc. Probably-mostly-sorta straightforward.
+An attempt was made so that the generated Lua source for a template has the same line numbers as the original template.
+
+It doesn't provide security at all. My personal use case features neither server programming nor user input.
+Bad input can trigger injection attacks. _YOU'VE BEEN WARNED!_
 
 ## Example:
 
@@ -30,8 +33,6 @@ if err then error(err) end
 local output = chunk{count = 99}
 print(output)
 ```
-
-You can embed expressions, control structures, pass an environment, etc. Probably-mostly-sorta straightforward.
 
 ## License
 
