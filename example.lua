@@ -1,7 +1,6 @@
 local template = require("elua")
-local dbg = require("debugger")
-
-dbg.call(function()
+--local dbg = require("debugger")
+--dbg.call(function()
 
 local file = io.open("example.elua", "r")
 print(template.compile(file:read("a")))
@@ -12,4 +11,4 @@ if err then error(err) end
 local output = chunk{foo = "bar"}
 print(output)
 
-end)
+--end)
