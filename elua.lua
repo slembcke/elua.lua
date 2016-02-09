@@ -4,7 +4,7 @@ local EQUALS = string.byte("=")
 local sub = string.sub
 
 function template.compile(source)
-	local fragments = {"local __PUSH__, _ENV = ...;"}
+	local fragments = {"local __OUT, _ENV = ...;"}
 	
 	local cursor = 1
 	function push(...) for _, str in ipairs{...} do table.insert(fragments, str) end end
@@ -13,15 +13,15 @@ function template.compile(source)
 		str, code = string.match(source, "(.-)({{.-}})", cursor)
 		if str == nil and code == nil then
 			-- Push the remainder of the string.
-			push("__PUSH__[[", sub(source, cursor, -1), "]]; ")
+			push("__OUT[[", sub(source, cursor, -1), "]]; ")
 			break
 		else
 			-- Push the string component.
-			push("__PUSH__[[", str, "]]; ")
+			push("__OUT[[", str, "]]; ")
 			
 			if string.byte(code, 3) == EQUALS then
 				-- Push an evaluation expression {{=...}}
-				push("__PUSH__(", sub(code, 4, -3), "); ")
+				push("__OUT(", sub(code, 4, -3), "); ")
 			else
 				-- Push a chunk {{...}}
 				push(sub(code, 3, -3), "; ")
@@ -40,9 +40,9 @@ function template.load(str, name)
 	
 	return function(env)
 		local results = {}
-		local function push(value) table.insert(results, tostring(value)) end
+		local function out(value) table.insert(results, tostring(value)) end
 		
-		chunk(push, env or nil)
+		chunk(out, env or nil)
 		return table.concat(results)
 	end
 end
