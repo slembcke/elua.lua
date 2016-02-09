@@ -1,10 +1,10 @@
 Let's sing a song!
 
 {{for i = 9, 1, -1 do}}
-{{=i}} bottles of beer on the wall.
-{{=i}} bottles of beer.
+{{= i}} bottles of beer on the wall.
+{{= i}} bottles of beer.
 Take one down pass it around,
-{{=i - 1}} bottles of beer on the wall.
+{{= i - 1}} bottles of beer on the wall.
 
 {{end}}
 That was fun!

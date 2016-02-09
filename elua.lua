@@ -36,7 +36,8 @@ end
 
 function template.load(str, name)
 	local compiled = template.compile(str)
-	local chunk = load(compiled, name or "COMPILED TEMPLATE", "t", nil)
+	local chunk, err = load(compiled, name or "COMPILED TEMPLATE", "t", nil)
+	if err then return nil, err end
 	
 	return function(env)
 		local results = {}
@@ -49,11 +50,10 @@ end
 
 function template.loadFile(filename)
 	local file = io.open(filename, "r")
-	
-	local chunk = template.load(file:read("a"), filename)
+	local source = file:read("a")
 	file:close()
 	
-	return chunk
+	return template.load(source, filename)
 end
 
 return template
