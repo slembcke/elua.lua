@@ -1,5 +1,8 @@
 local template = {}
 
+local BEGIN = "[====["
+local END = "]====]"
+
 local EQUALS = string.byte("=")
 local sub = string.sub
 
@@ -13,11 +16,11 @@ function template.compile(source)
 		str, code = string.match(source, "(.-)({{.-}})", cursor)
 		if str == nil and code == nil then
 			-- Push the remainder of the string.
-			push("__OUT[[", sub(source, cursor, -1), "]]; ")
+			push("__OUT"..BEGIN, sub(source, cursor, -1), END.."; ")
 			break
 		else
 			-- Push the string component.
-			push("__OUT[[", str, "]]; ")
+			push("__OUT"..BEGIN, str, END.."; ")
 			
 			if string.byte(code, 3) == EQUALS then
 				-- Push an evaluation expression {{=...}}
