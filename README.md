@@ -12,25 +12,23 @@ Bad input can trigger injection attacks. _YOU'VE BEEN WARNED!_
 example.elua:
 ```
 Let's sing a song!
-
 {{for i = count, 1, -1 do}}
 {{= i}} bottles of beer on the wall.
 {{= i}} bottles of beer.
 Take one down pass it around,
 {{= i - 1}} bottles of beer on the wall.
-
 {{end}}
 That was fun!
 ```
 
 example.lua:
 ```
-local template = require("elua")
+local elua = require("elua")
 
-local chunk, err = template.loadFile("example.elua")
+local bottles, err = elua.compile_file("example.elua")
 if err then error(err) end
 
-local output = chunk{count = 99}
+local output = bottles{count = 99}
 print(output)
 ```
 
